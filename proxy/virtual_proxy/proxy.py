@@ -1,39 +1,46 @@
-import time 
+class BankAccount:
 
-class Image(object):
-    def display(self):
-        pass
+    def __init__(self, balance):
+        print("bank account is generated")
+        self.balance = balance
 
-class RealImage(Image):
-    def __init__(self, filename):
-        self.filename = filename
-        __load_image_from_disk()
+    def deposit(self, amount):
+        self.balance += amount
 
-    def __load_image_from_disk(self, filename):
-        print("loading "+filename+" begin")
-        time.sleep(100)
-        print("loading "+filename+" end")
+    def withdraw(self, amount):
+        self.balance -= amount
 
-    def display(self):
-        print("Displaying "+self.filename)
+class VirtualAccountProxy:
 
-class ProxyImage(Image):
-    def __init__(self, filename):
-        self.filename = filename
-        self.image = None
-        #if image == None:
-        #    image = RealImage(filename)
-        #image.display()
+    def __init__(self, starting_balance):
+        print("virtual account proxy is generated")
+        self.subject = None
+        self.starting_balance = starting_balance
+
+    def balance(self):
+        self.create()
+        self.subject.balance
+
+    def deposit(self, amount):
+        self.create()
+        self.subject.deposit(amount)
+
+    def withdraw(self, amount):
+        self.create()
+        self.subject.withdraw(amount)
+
+    def announce(self):
+        return "virtual account proxy is announcing"
+
+    def create(self):
+        if self.subject is None:
+            self.subject = BankAccount(self.starting_balance)
 
 def main():
-    image1 = ProxyImage("filename1")    
-    image2 = ProxyImage("filename2")
-    image3 = ProxyImage("filename3")
-
-    image1.display()
-    image2.display()
-    image3.display()
-
+    proxy = VirtualAccountProxy(100)
+    print(proxy.announce())
+    proxy.deposit(50)
+    proxy.withdraw(10)
 
 if __name__ == "__main__":
     main()
